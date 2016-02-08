@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Sunshine</string>
+    <string name="action_settings">Settings</string>
+    <string name="andr.png">andr.png.png</string>
+    <string name="temp">21°</string>
+    <string name="temp_next">8°</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="enter_location">Enter your location here</string>
+    <string name="go">Go</string>
+    <string name="title_activity_detail">DetailActivity</string>
+</resources>
