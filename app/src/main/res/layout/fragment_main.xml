@@ -11,17 +11,10 @@
     tools:context="app.com.example.android.sunshine.ForecastFragment"
     tools:showIn="@layout/content_main">
 
-    <!--<EditText
-        android:id="@+id/param_value"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:inputType="text"
-        android:hint="@string/enter_location"
-        android:imeOptions="actionGo"
-        ></EditText>!-->
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listview_forcast">
     </ListView>
+
 </LinearLayout>

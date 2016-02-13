@@ -8,4 +8,11 @@
     <string name="enter_location">Enter your location here</string>
     <string name="go">Go</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="location_input">Location</string>
+    <string name="location_default">94043</string>
+    <string name="temp_units_key">temp_units</string>
+    <string name="temp_units_title">Temperature Units</string>
+    <string name="temp_default">metric</string>
+    <string name="location_key">location</string>
 </resources>

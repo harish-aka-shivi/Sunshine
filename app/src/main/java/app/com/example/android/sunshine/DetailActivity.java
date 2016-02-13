@@ -2,7 +2,9 @@ package app.com.example.android.sunshine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,51 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-
-
-/*import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import app.com.example.android.sunshine.R;
-
-i*mport android.support.design.widget.FloatingActionButton;
-        /package app.com.example.android.sunshine;
-
-public class DetailActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-}
-
-
-
- * Copyright (C) 2014 The Android Open Source Project
+/* Copyright (C) 2014 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,15 +27,11 @@ public class DetailActivity extends AppCompatActivity {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 public class DetailActivity extends AppCompatActivity{
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_detail);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -87,15 +41,28 @@ public class DetailActivity extends AppCompatActivity{
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.detail, menu);
+        MenuItem item = menu.findItem(R.id.menu_share);
+        ShareActionProvider mshareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        if (mshareActionProvider != null) {
+            mshareActionProvider.setShareIntent(getDefaultIntent());
+        }
         return true;
+    }
+
+    public Intent getDefaultIntent() {
+        Intent intent_share = getIntent();
+        String new_msg = intent_share.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        new_msg =  new_msg + "SunshineApp";
+        intent.putExtra(Intent.EXTRA_TEXT,new_msg);
+        intent.setType("text/plain");
+        return intent;
     }
 
     @Override
@@ -107,9 +74,9 @@ public class DetailActivity extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this,SettingsActivity.class);
+            startActivity(intent);
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -118,15 +85,11 @@ public class DetailActivity extends AppCompatActivity{
      */
     public static class PlaceholderFragment extends Fragment {
 
-        public PlaceholderFragment() {
-        }
-
+        public PlaceholderFragment() {}
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
             Intent intent = getActivity().getIntent();
             String msg = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
             TextView textView = new TextView(getActivity());
