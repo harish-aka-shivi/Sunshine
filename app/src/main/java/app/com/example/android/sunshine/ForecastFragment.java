@@ -1,4 +1,4 @@
-package app.com.example.android.sunshine;
+    package app.com.example.android.sunshine;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -108,15 +108,15 @@ public class ForecastFragment extends Fragment {
     }
 
     public void updateWeather() {
-        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity(),forecastadapter);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String param[]= new String[2];
         param[0] = pref.getString(getString(R.string.location_key),getString(R.string.location_default));
         param[1] = pref.getString(getString(R.string.temp_units_key),getString(R.string.temp_default));
-        new FetchWeatherTask().execute(param);
+        weatherTask.execute(param);
     }
 
-    public class FetchWeatherTask extends AsyncTask<String,Void,String[]> {
+    /*public class FetchWeatherTask extends AsyncTask<String,Void,String[]> {
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -126,9 +126,9 @@ public class ForecastFragment extends Fragment {
         // Will contain the raw JSON response as a string.
         String forecastJsonStr = null;
 
-        /* The date/time conversion code is going to be moved outside the asynctask later,
+        *//* The date/time conversion code is going to be moved outside the asynctask later,
        * so for convenience we're breaking it out into its own method now.
-       */
+       *//*
         private String getReadableDateString(long time){
             // Because the API returns a unix timestamp (measured in seconds),
             // it must be converted to milliseconds in order to be converted to valid date.
@@ -136,9 +136,9 @@ public class ForecastFragment extends Fragment {
             return shortenedDateFormat.format(time);
         }
 
-        /**
+        *//**
          * Prepare the weather high/lows for presentation.
-         */
+         *//*
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
             long roundedHigh = Math.round(high);
@@ -242,13 +242,13 @@ public class ForecastFragment extends Fragment {
             forecastadapter.addAll(Arrays.asList(strings));
         }
 
-        /**
+        *//**
              * Take the String representing the complete forecast in JSON Format and
              * pull out the data we need to construct the Strings needed for the wireframes.
              *
              * Fortunately parsing is easy:  constructor takes the JSON string and converts it
              * into an Object hierarchy for us.
-             */
+             *//*
         private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
         throws JSONException {
 
@@ -315,7 +315,7 @@ public class ForecastFragment extends Fragment {
             }
             return resultStrs;
         }
-    }
+    }*/
 }
 
 

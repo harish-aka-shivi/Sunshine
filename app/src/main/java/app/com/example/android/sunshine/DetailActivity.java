@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 /* Copyright (C) 2014 The Android Open Source Project
  *
@@ -93,9 +94,9 @@ public class DetailActivity extends AppCompatActivity{
             Intent intent = getActivity().getIntent();
             String msg = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
             TextView textView = new TextView(getActivity());
-            textView.setTextSize(40);
+            textView.setTextSize(30);
             textView.setText(msg);
-            FrameLayout layout = (FrameLayout) getActivity().findViewById(R.id.container);
+            RelativeLayout layout = (RelativeLayout) getActivity().findViewById(R.id.container);
             layout.addView(textView);
             return rootView;
         }
