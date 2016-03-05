@@ -12,9 +12,10 @@
     tools:showIn="@layout/content_main">
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listview_forcast">
+        android:id="@+id/listview_forcast"
+        android:layout_marginTop="?attr/actionBarSize">
     </ListView>
 
 </LinearLayout>

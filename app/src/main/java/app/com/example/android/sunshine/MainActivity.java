@@ -1,7 +1,10 @@
 package app.com.example.android.sunshine;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInstaller;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +15,17 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
     public  static final String EXTRA_MESSAGE = "com.example.android.sunshine.MESSAGE";
+    private String mLocation;
+    private final String FORECASTFRAGMENT_TAG = "FFTAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mLocation = Utility.getPreferredLocation(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if(savedInstanceState == null){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment,new ForecastFragment(),FORECASTFRAGMENT_TAG).commit();}
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -29,6 +37,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    protected void onResume() {
+        super.onResume();
+        String location = Utility.getPreferredLocation(this);
+        // update the location in our second pane using the fragment manager
+        if (location != null && !location.equals(mLocation)) {
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if ( null != ff ) {
+                ff.onLocationChanged();
+            }
+            mLocation = location;
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -23,9 +23,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 public class WeatherProvider extends ContentProvider {
-
     // The URI Matcher used by this content provider.
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private WeatherDbHelper mOpenHelper;
@@ -36,6 +36,36 @@ public class WeatherProvider extends ContentProvider {
     static final int LOCATION = 300;
 
     private static final SQLiteQueryBuilder sWeatherByLocationSettingQueryBuilder;
+
+    private static final String[] FORECAST_COLUMNS = {
+            // In this case the id needs to be fully qualified with a table name, since
+            // the content provider joins the location & weather tables in the background
+            // (both have an _id column)
+            // On the one hand, that's annoying.  On the other, you can search the weather table
+            // using the location set by the user, which is only in the Location table.
+            // So the convenience is worth it.
+            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+            WeatherContract.WeatherEntry.COLUMN_DATE,
+            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+            WeatherContract.LocationEntry.COLUMN_COORD_LONG
+    };
+
+    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
+    // must change.
+    static final int COL_WEATHER_ID = 0;
+    static final int COL_WEATHER_DATE = 1;
+    static final int COL_WEATHER_DESC = 2;
+    static final int COL_WEATHER_MAX_TEMP = 3;
+    static final int COL_WEATHER_MIN_TEMP = 4;
+    static final int COL_LOCATION_SETTING = 5;
+    static final int COL_WEATHER_CONDITION_ID = 6;
+    static final int COL_COORD_LAT = 7;
+    static final int COL_COORD_LONG = 8;
 
     static{
         sWeatherByLocationSettingQueryBuilder = new SQLiteQueryBuilder();
@@ -97,7 +127,6 @@ public class WeatherProvider extends ContentProvider {
             Uri uri, String[] projection, String sortOrder) {
         String locationSetting = WeatherContract.WeatherEntry.getLocationSettingFromUri(uri);
         long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
-
         return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 sLocationSettingAndDaySelection,
@@ -169,11 +198,13 @@ public class WeatherProvider extends ContentProvider {
                         String sortOrder) {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
+        //Log.v("CHECKING FOR SELECTION ",selection);
+        //Log.v("CHECKING FOR ARGS", selectionArgs.toString());
+        //Log.v("CHECKING FOR URI",uri.toString());
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
             // "weather/*/*"
-            case WEATHER_WITH_LOCATION_AND_DATE:
-            {
+            case WEATHER_WITH_LOCATION_AND_DATE: {
                 retCursor = getWeatherByLocationSettingAndDate(uri, projection, sortOrder);
                 break;
             }
@@ -184,12 +215,14 @@ public class WeatherProvider extends ContentProvider {
             }
             // "weather"
             case WEATHER: {
-                retCursor =mOpenHelper.getReadableDatabase().query(WeatherContract.WeatherEntry.TABLE_NAME,projection,selection,selectionArgs,null,null,sortOrder) ;
+                retCursor =mOpenHelper.getReadableDatabase().query(WeatherContract.WeatherEntry.TABLE_NAME,
+                        projection,selection,selectionArgs,null,null,sortOrder) ;
                 break;
             }
             // "location"
             case LOCATION: {
-                retCursor = mOpenHelper.getReadableDatabase().query(WeatherContract.LocationEntry.TABLE_NAME,projection,selection,selectionArgs,null,null,sortOrder);
+                retCursor = mOpenHelper.getReadableDatabase().query(WeatherContract.LocationEntry.TABLE_NAME,
+                        projection,selection,selectionArgs,null,null,sortOrder);
                 break;
             }
 
@@ -223,7 +256,7 @@ public class WeatherProvider extends ContentProvider {
                 normalizeDate(values);
                 long _id = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, values);
                 if( _id > 0)
-                    returnUri = WeatherContract.WeatherEntry.buildWeatherUri(_id);
+                    returnUri = WeatherContract.LocationEntry.buildLocationUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
