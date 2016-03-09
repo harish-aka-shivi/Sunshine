@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
+    android:background="@drawable/touch_selector"
     android:orientation="horizontal"
     android:padding="16dp">
 
@@ -13,28 +14,32 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="46dp">
 
         <TextView
             android:id="@+id/list_item_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Feb 25, 2016"
-            android:textSize="20dp" />
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="22sp"
+            android:layout_gravity="left" />
 
         <TextView
             android:id="@+id/list_item_high_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="25"
-            android:textSize="17dp" />
+            android:fontFamily="sans-serif-light"
+            android:textSize="72sp"
+            android:layout_gravity="left" />
 
         <TextView
             android:id="@+id/list_item_low_textview"
             android:layout_width="wrap_content"
+            android:fontFamily="sans-serif-light"
             android:layout_height="wrap_content"
-            android:text="05"
-            android:textSize="17dp" />
+            android:textSize="36sp"
+            android:layout_gravity="left" />
     </LinearLayout>
 
     <LinearLayout
@@ -48,13 +53,15 @@
             android:id="@+id/list_item_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            ></ImageView>
+            android:layout_gravity="center_horizontal">
+        </ImageView>
 
         <TextView
             android:id="@+id/list_item_forecast_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="forecadt is"
-            android:textSize="17dp" />
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="22sp"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 </LinearLayout>

@@ -119,9 +119,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         // Now we have a String representing the complete forecast in JSON Format.
         // Fortunately parsing is easy:  constructor takes the JSON string and converts it
         // into an Object hierarchy for us.
-
         // These are the names of the JSON objects that need to be extracted.
-
         // Location information
         final String OWM_CITY = "city";
         final String OWM_CITY_NAME = "name";
@@ -170,7 +168,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
             // Since this data is also sent in-order and the first day is always the
             // current day, we're going to take advantage of that to get a nice
             // normalized UTC date for all of our weather.
-
             Time dayTime = new Time();
             dayTime.setToNow();
 
@@ -240,7 +237,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 // Student: call bulkInsert to add the weatherEntries to the database here
                 inserted = mContext.getContentResolver().bulkInsert(WeatherEntry.CONTENT_URI, cvArray);
             }
-
             Log.d(LOG_TAG, "FetchWeatherTask Complete. " + cVVector.size() + "Inserted");
 
         } catch (JSONException e) {
@@ -255,7 +251,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
         // If there's no zip code, there's nothing to look up.  Verify size of params.
         if (params.length == 0) {
-            //return null;
+            return null;
         }
         String locationQuery = params[0];
 
@@ -326,10 +322,11 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
             // If the code didn't successfully get the weather data, there's no point in attemtping
             // to parse it.
             //return null;
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             Log.e(LOG_TAG,e.getMessage(),e);
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -343,6 +340,4 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         }
         return null;
     }
-
-
 }

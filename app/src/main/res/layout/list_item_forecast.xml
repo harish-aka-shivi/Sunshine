@@ -5,63 +5,65 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:weightSum="1"
+    android:background="@drawable/touch_selector"
     android:minHeight="?android:attr/listPreferredItemHeight">
 
-    <!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:attr/listPreferredItemHeight"
-        android:gravity="center_vertical"
-        android:id="@+id/list_item_forecast_textview"
-        android:layout_toLeftOf="@+id/textView2"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView" />-->
+    <!--android:src="@mipmap/ic_launcher"-->
 
+    <FrameLayout
+        android:layout_width="60dp"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="65dp"
-        android:id="@+id/list_item_icon"
-        android:layout_weight="0.16"/>
-        <!--android:src="@mipmap/ic_launcher"-->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_item_icon"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="175dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.69"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_weight="0.49">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-condensed"
             android:id="@+id/list_item_date_textview"/>
             <!--android:text="date"-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-condensed"
             android:id="@+id/list_item_forecast_textview"/>
             <!--android:text="description"-->
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.16"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_weight="0.35">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:id="@+id/list_item_high_textview"/>
+            android:textSize="22sp"
+            android:id="@+id/list_item_high_textview"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_gravity="center_horizontal" />
             <!--android:text="high"-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:id="@+id/list_item_low_textview"/>
+            android:textSize="14sp"
+            android:id="@+id/list_item_low_textview"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_gravity="center_horizontal" />
             <!--android:text="low"-->
     </LinearLayout>
 
