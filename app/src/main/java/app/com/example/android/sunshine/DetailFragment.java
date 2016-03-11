@@ -201,7 +201,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         viewHolderDetail.windInfo.setText(windWithDirection);
 
         String pressure = String.valueOf(data.getLong(COL_WEATHER_PRESSURE));
-        viewHolderDetail.pressure.setText(" Pressure: "+pressure+"hPa");
+        viewHolderDetail.pressure.setText(" Pressure: "+pressure+" hPa");
         //mTextView.setText(mForecast);
         //if (mShareActionProvider != null) {
         //    mShareActionProvider.setShareIntent(createShareForecastIntent());

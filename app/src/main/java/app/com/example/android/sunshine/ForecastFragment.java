@@ -23,6 +23,9 @@ import android.widget.ListView;
 import java.util.List;
 
 import app.com.example.android.sunshine.data.WeatherContract;
+import app.com.example.android.sunshine.data.WeatherDbHelper;
+import app.com.example.android.sunshine.data.WeatherProvider;
+import app.com.example.android.sunshine.service.SunshineService;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private static final int FORECAST_LOADER = 0;
@@ -30,6 +33,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private ListView mListView;
     private static final String SELECTED_KEY = "selected position";
     private ForecastAdapter mForecastAdapter;
+    private boolean mFlag = false;
     List<String> arr;
     private static final String LOG_TAG = "sunshine";
     private boolean mUseTodayLayout;
@@ -108,6 +112,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             // swapout in onLoadFinished.
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
+
+        //
         return rootView;
     }
 
@@ -127,6 +133,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
          * DetailFragmentCallback for when an item has been selected.
          */
         public void onItemSelected(Uri dateUri);
+        public void displayTodayFragment(Uri dataUri);
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -176,9 +183,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     public void updateWeather() {
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
+       // FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
         String location = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(location);
+        //weatherTask.execute(location);*/
+
+        Intent intent = new Intent(getActivity(), SunshineService.class);
+        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,location);
+        getActivity().startService(intent);
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -191,14 +202,29 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         return cursorLoader;
     }
 
+    public void displayTask() {
+        Cursor cursor = (Cursor) mListView.getItemAtPosition(0);
+        long date = cursor.getLong(COL_WEATHER_DATE);
+        String locationSetting = Utility.getPreferredLocation(getActivity());
+        Uri uri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting,date);
+        ((Callback) getActivity()).displayTodayFragment(uri);
+    }
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.v("Cursor values",data.toString());
         mForecastAdapter.swapCursor(data);
+        //displayTask();
         if(mPosition != ListView.INVALID_POSITION) {
             mListView.smoothScrollToPosition(mPosition);
         }
+        else {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    displayTask();
+                }
+            });
+        }
     }
-
     public void onLoaderReset (Loader<Cursor > loader) {
         mForecastAdapter.swapCursor(null);
     }

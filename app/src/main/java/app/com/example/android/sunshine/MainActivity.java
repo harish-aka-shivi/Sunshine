@@ -72,7 +72,18 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
         }
     }
+    public void displayTodayFragment(Uri dataUri) {
+        if (mTwoPane) {
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, dataUri);
 
+            final DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
+                .commitAllowingStateLoss();
+        }
+    }
     protected void onResume() {
         super.onResume();
         String location = Utility.getPreferredLocation(this);
