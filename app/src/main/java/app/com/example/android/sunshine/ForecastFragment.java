@@ -29,7 +29,8 @@ import java.util.List;
 import app.com.example.android.sunshine.data.WeatherContract;
 import app.com.example.android.sunshine.data.WeatherDbHelper;
 import app.com.example.android.sunshine.data.WeatherProvider;
-import app.com.example.android.sunshine.service.SunshineService;
+//import app.com.example.android.sunshine.service.SunshineService;
+import app.com.example.android.sunshine.sync.SunshineSyncAdapter;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private static final int FORECAST_LOADER = 0;
@@ -188,28 +189,30 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void updateWeather() {
        // FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        String location = Utility.getPreferredLocation(getActivity());
+        //String location = Utility.getPreferredLocation(getActivity());
         //weatherTask.execute(location);*/
 
-        Intent intent = new Intent(getActivity(), SunshineService.class);
+        /*Intent intent = new Intent(getActivity(), SunshineService.class);
         intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,location);
-        getActivity().startService(intent);
+        getActivity().startService(intent);*/
 
         /*AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         Intent intent1 = new Intent(getActivity(),SunshineService.AlarmReceiver.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(getActivity(),0,intent1,0);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()+1000*5,alarmIntent);*/
 
-        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
-        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
+        //Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        //alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
 
         //Wrap in a pending intent which only fires once.
-        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0,alarmIntent,PendingIntent.FLAG_ONE_SHOT);//getBroadcast(context, 0, i, 0);
+        //PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0,alarmIntent,PendingIntent.FLAG_ONE_SHOT);//getBroadcast(context, 0, i, 0);
 
-        AlarmManager am=(AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+        //AlarmManager am=(AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
 
         //Set the AlarmManager to wake up the system.
-        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi);
+        //am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi);
+
+        SunshineSyncAdapter.syncImmediately(getActivity());
 
     }
 
@@ -231,20 +234,20 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         ((Callback) getActivity()).displayTodayFragment(uri);
     }
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v("Cursor values",data.toString());
+        //Log.v("Cursor values",data.toString());
         mForecastAdapter.swapCursor(data);
         //displayTask();
         if(mPosition != ListView.INVALID_POSITION) {
             mListView.smoothScrollToPosition(mPosition);
         }
-        else {
+        /*else {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     displayTask();
                 }
             });
-        }
+        }*/
     }
     public void onLoaderReset (Loader<Cursor > loader) {
         mForecastAdapter.swapCursor(null);

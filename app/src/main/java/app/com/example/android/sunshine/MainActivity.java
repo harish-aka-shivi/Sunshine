@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import app.com.example.android.sunshine.sync.SunshineSyncAdapter;
+
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
     public  static final String EXTRA_MESSAGE = "com.example.android.sunshine.MESSAGE";
     private String mLocation;
@@ -49,8 +51,9 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
         }
         forecastFragment.setTodayView(!mTwoPane);
-
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
+
     public void onItemSelected(Uri uri) {
         if(mTwoPane == false) {
             Intent intent = new Intent(this, DetailActivity.class).setData(uri);
