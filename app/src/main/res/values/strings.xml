@@ -62,4 +62,11 @@
     <string name="pref_units_metric">metric</string>
     <string name="pref_units_imperial">imperial</string>
 
+    <string name="pref_enable_notification_key">enable_notification</string>
+    <string name="pref_enable_notification_label">Weather Notification</string>
+
+    <string name="pref_enable_notifications_true">Enabled</string>
+    <string name="pref_enable_notifications_false">Not Enabled</string>
+    <string name="pref_enable_notifications_default" translatable="false">true</string>
+
 </resources>
