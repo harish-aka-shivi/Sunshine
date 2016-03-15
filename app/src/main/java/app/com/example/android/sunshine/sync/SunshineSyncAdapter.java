@@ -391,6 +391,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 inserted = getContext().getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
                 notifyWeather();
             }
+
+            getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
+                    WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?",new String[]{String.valueOf(dayTime.setJulianDay(julianStartDay-1))});
+
             Log.d(LOG_TAG, "FetchWeatherTask Complete. " + cVVector.size() + "Inserted");
 
         } catch (JSONException e) {
