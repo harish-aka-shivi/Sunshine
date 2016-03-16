@@ -138,7 +138,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 // buffer for debugging.
                 buffer.append(line + "\n");
             }
-
             if (buffer.length() == 0) {
                 // Stream was empty.  No point in parsing.
                 //return null;
@@ -165,9 +164,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     Log.e(LOG_TAG, "Error closing stream", e);
                 }
             }
-        }
-        return;
-
+        } return;
     }
 
     /**
@@ -182,10 +179,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(getSyncAccount(context),
                 context.getString(R.string.content_authority), bundle);
-
-
     }
-
     /**
      * Helper method to get the fake account to be used with SyncAdapter, or make a new one
      * if the fake account doesn't exist yet.  If we make a new account, we call the
@@ -422,7 +416,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-
     private static void onAccountCreated(Account newAccount, Context context) {
         /*
          * Since we've created an account
@@ -500,7 +493,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 }
             }
         }
-
     }
 
 

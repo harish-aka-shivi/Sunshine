@@ -108,7 +108,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         inflater.inflate(R.menu.detail, menu);
         MenuItem item = menu.findItem(R.id.menu_share);
         ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-        if (mShareActionProvider != null) {
+        if (mForecast != null) {
             mShareActionProvider.setShareIntent(createShareForecastIntent());
         }
         //return true;
@@ -189,9 +189,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         viewHolderDetail.highTempView.setText(high);
 
         String low = Utility.formatTemperature(getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP));
-        //mForecast = String.format("%s - %s - %s - %s", dateString, weatherDescription, high, low);
-        viewHolderDetail.lowTempView.setText(low);
 
+        viewHolderDetail.lowTempView.setText(low);
         String humidity =  String.valueOf(data.getDouble(COL_WEATHER_HUMIDITY));
         viewHolderDetail.humidityView.setText(" Humidity: " + humidity + "%");
 
@@ -202,10 +201,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         String pressure = String.valueOf(data.getLong(COL_WEATHER_PRESSURE));
         viewHolderDetail.pressure.setText(" Pressure: "+pressure+" hPa");
+
+        //sharing of data
+        mForecast = String.format("%s - %s - %s - %s ", dateString, weatherDescription, high, low);
         //mTextView.setText(mForecast);
-        //if (mShareActionProvider != null) {
-        //    mShareActionProvider.setShareIntent(createShareForecastIntent());
-        //}
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(createShareForecastIntent());
+        }
     }
 
     public void onLoaderReset(Loader<Cursor> loader) {
