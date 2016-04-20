@@ -48,14 +48,15 @@
         android:layout_width="125dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:layout_weight="0.35">
+        android:layout_weight="0.35"
+        android:layout_marginRight="20dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="22sp"
             android:id="@+id/list_item_high_textview"
             android:fontFamily="sans-serif-condensed"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal|right" />
             <!--android:text="high"-->
         <TextView
             android:layout_width="wrap_content"
@@ -63,7 +64,8 @@
             android:textSize="14sp"
             android:id="@+id/list_item_low_textview"
             android:fontFamily="sans-serif-condensed"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal|right"
+            android:layout_marginRight="10dp" />
             <!--android:text="low"-->
     </LinearLayout>
 

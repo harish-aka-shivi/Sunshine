@@ -8,9 +8,9 @@
     </EditTextPreference>
 
     <ListPreference
-        android:key="@string/temp_units_key"
-        android:title="@string/temp_units_title"
-        android:defaultValue="@string/temp_default"
+        android:key="@string/pref_temp_units_key"
+        android:title="@string/pref_temp_units_title"
+        android:defaultValue="@string/pref_temp_units_default"
         android:entries="@array/tempUnits"
         android:entryValues="@array/tempUnitsValues">
     </ListPreference>

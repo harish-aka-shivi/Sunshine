@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -32,16 +35,42 @@ import app.com.example.android.sunshine.data.WeatherProvider;
 //import app.com.example.android.sunshine.service.SunshineService;
 import app.com.example.android.sunshine.sync.SunshineSyncAdapter;
 
-public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener{
     private static final int FORECAST_LOADER = 0;
     private int mPosition = ListView.INVALID_POSITION;
     private ListView mListView;
+    private TextView mEmptyTextView;
     private static final String SELECTED_KEY = "selected position";
     private ForecastAdapter mForecastAdapter;
     private boolean mFlag = false;
     List<String> arr;
-    private static final String LOG_TAG = "sunshine";
+    private static final String LOG_TAG = "sunshine ForecastFragment";
     private boolean mUseTodayLayout;
+    private final Context mContext = getContext();
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_location_status_key))) {
+            updateEmptyView();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        PreferenceManager.getDefaultSharedPreferences(getContext()).
+                registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        PreferenceManager.getDefaultSharedPreferences(getContext()).
+                unregisterOnSharedPreferenceChangeListener(this);
+
+    }
+
     private static final String[] FORECAST_COLUMNS =
     {   // In this case the id needs to be fully qualified with a table name, since
         // the content provider joins the location & weather tables in the background
@@ -97,6 +126,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         mListView = (ListView) rootView.findViewById(R.id.listview_forcast);
+        mEmptyTextView = (TextView) rootView.findViewById(R.id.empty_list);
+        mListView.setEmptyView(mEmptyTextView);
         mListView.setAdapter(mForecastAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -137,8 +168,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(Uri dateUri);
-        public void displayTodayFragment(Uri dataUri);
+        void onItemSelected(Uri dateUri);
+        void displayTodayFragment(Uri dataUri);
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -211,9 +242,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         //Set the AlarmManager to wake up the system.
         //am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi);
-
         SunshineSyncAdapter.syncImmediately(getActivity());
-
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -233,24 +262,44 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         Uri uri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting,date);
         ((Callback) getActivity()).displayTodayFragment(uri);
     }
+
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //Log.v("Cursor values",data.toString());
         mForecastAdapter.swapCursor(data);
         //displayTask();
+
         if(mPosition != ListView.INVALID_POSITION) {
             mListView.smoothScrollToPosition(mPosition);
         }
-        /*else {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    displayTask();
-                }
-            });
-        }*/
+        updateEmptyView();
     }
+
     public void onLoaderReset (Loader<Cursor > loader) {
         mForecastAdapter.swapCursor(null);
+    }
+
+    private void updateEmptyView() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (mForecastAdapter.getCount() == 0) {
+            if (mEmptyTextView != null) {
+                int message = R.string.empty_forecast_list_string;
+                @SunshineSyncAdapter.LocationStatus int location = Utility.getLocationStatus(mContext);
+                switch (location) {
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
+                        message = R.string.empty_forecast_list_server_down;
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
+                        message = R.string.empty_forecast_list_server_error;
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_INVALID:
+                        message = R.string.empty_forecast_list_invalid_location;
+                        break;
+                    default:
+                        message = R.string.empty_forecast_list_no_network;
+                }
+                mEmptyTextView.setText(message);
+            }
+        }
     }
 }
 

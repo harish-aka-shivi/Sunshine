@@ -325,8 +325,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         } catch (JSONException e) {
             Log.e(LOG_TAG,e.getMessage(),e);
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -340,4 +339,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         }
         return null;
     }
+
+
 }
