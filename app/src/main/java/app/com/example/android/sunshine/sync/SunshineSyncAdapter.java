@@ -93,7 +93,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         Log.d(LOG_TAG, "onPerformSync Called.");
         Log.d(LOG_TAG,"onPerformSync is called after 30 sec");
         String locationQuery = Utility.getPreferredLocation(getContext());
-
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
@@ -103,7 +102,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         String forecastJsonStr = null;
 
         String format = "json";
-        String units = Utility.getPreferredUnits(mContext);
+        String units = Utility.getPreferredUnits(getContext());
         int numDays = 14;
 
         try {
@@ -127,6 +126,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     .build();
 
             URL url = new URL(builtUri.toString());
+            //builtUri = http://api.openweathermap.org/data/2.5/forecast/daily?q=3568986433578&mode=json&units=metric&cnt=14&APPID=6d55e713d39e4bc212a3d9708d479d74
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -138,7 +138,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
-                //return null;
+                return;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -309,12 +309,22 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
-            JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
-            int messageCode = forecastJson.getInt(OWM_MESSAGE_CODE);
-            if (messageCode == 404) {
-                Utility.resetLocationStatus(getContext());
+            if(forecastJson.has(OWM_MESSAGE_CODE)) {
+                int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
+                switch (errorCode) {
+                    case HttpURLConnection.HTTP_OK:
+                        setLocationStatus(getContext(),LOCATION_STATUS_OK);
+                        break;
+                    case HttpURLConnection.HTTP_NOT_FOUND:
+                        setLocationStatus(getContext(),LOCATION_STATUS_INVALID);
+                        return;
+                    default:
+                        setLocationStatus(getContext(),LOCATION_STATUS_SERVER_DOWN);
+                        return;
+                }
             }
 
+            JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
             String cityName = cityJson.getString(OWM_CITY_NAME);
 
@@ -409,6 +419,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?",new String[]{String.valueOf(dayTime.setJulianDay(julianStartDay-1))});
 
             Log.d(LOG_TAG, "FetchWeatherTask Complete. " + cVVector.size() + "Inserted");
+            setLocationStatus(getContext(),LOCATION_STATUS_OK);
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -466,7 +477,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
             String lastNotificationKey = context.getString(R.string.pref_last_notification);
             long lastSync = prefs.getLong(lastNotificationKey, 0);
-            Log.d(LOG_TAG,"we are in notifyWEATHER");
             if (System.currentTimeMillis() - lastSync >= DAY_IN_MILLIS  ) {
                 // Last sync was more than 1 day ago, let's send a notification with the weather.
                 String locationQuery = Utility.getPreferredLocation(context);

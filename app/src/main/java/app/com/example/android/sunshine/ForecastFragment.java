@@ -47,7 +47,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     List<String> arr;
     private static final String LOG_TAG = "sunshine ForecastFragment";
     private boolean mUseTodayLayout;
-    private final Context mContext = getContext();
+    //private final Context mContext = getContext();
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -191,10 +191,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public boolean onOptionsItemSelected(MenuItem item)  {
         int id = item.getItemId();
-        /*if(id == R.id.action_refresh) {
-            updateWeather();
-            return true;
-        }*/
+
         if(id == R.id.view_map) {
             findLocation();
         }
@@ -219,13 +216,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     public void updateWeather() {
-       // FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        //String location = Utility.getPreferredLocation(getActivity());
-        //weatherTask.execute(location);*/
 
-        /*Intent intent = new Intent(getActivity(), SunshineService.class);
-        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,location);
-        getActivity().startService(intent);*/
 
         /*AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         Intent intent1 = new Intent(getActivity(),SunshineService.AlarmReceiver.class);
@@ -283,7 +274,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if (mForecastAdapter.getCount() == 0) {
             if (mEmptyTextView != null) {
                 int message = R.string.empty_forecast_list_string;
-                @SunshineSyncAdapter.LocationStatus int location = Utility.getLocationStatus(mContext);
+                @SunshineSyncAdapter.LocationStatus int location = Utility.getLocationStatus(getContext());
                 switch (location) {
                     case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
                         message = R.string.empty_forecast_list_server_down;
@@ -295,7 +286,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                         message = R.string.empty_forecast_list_invalid_location;
                         break;
                     default:
-                        message = R.string.empty_forecast_list_no_network;
+                        if (!Utility.isNetworkAvailable(getActivity())) {
+                            message = R.string.empty_forecast_list_no_network;
+                            //message = R.string.kuch_bhi;
+                        }
                 }
                 mEmptyTextView.setText(message);
             }
