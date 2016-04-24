@@ -26,7 +26,6 @@
         android:summaryOff="@string/pref_enable_notifications_false"
         android:summaryOn="@string/pref_enable_notifications_true"
         android:defaultValue="@string/pref_enable_notifications_default">
-
     </CheckBoxPreference>
 
 </PreferenceScreen>
