@@ -80,8 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/image_icon"
-                android:layout_gravity="center_horizontal"
-                android:contentDescription="This is the image regarding the weather"/>
+                android:layout_gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"

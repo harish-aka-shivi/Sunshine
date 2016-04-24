@@ -180,27 +180,38 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         String dayString = Utility.getFormattedMonthDay(getActivity(),data.getLong(COL_WEATHER_DATE));
         viewHolderDetail.dayView.setText(dayString);
 
+        // set content Description for icon and description view
         String weatherDescription = data.getString(COL_WEATHER_DESC);
         viewHolderDetail.descView.setText(weatherDescription);
+        viewHolderDetail.descView.setContentDescription(getString
+                (R.string.a11y_forecast,weatherDescription));
+        viewHolderDetail.iconView.setContentDescription(getString
+                (R.string.a11y_forecast_icon,weatherDescription));
 
         boolean isMetric = Utility.isMetric(getActivity());
 
         String high = Utility.formatTemperature(getActivity(), data.getDouble(COL_WEATHER_MAX_TEMP));
         viewHolderDetail.highTempView.setText(high);
+        viewHolderDetail.highTempView.setContentDescription(getString(R.string.a11y_high_temp,high));
 
         String low = Utility.formatTemperature(getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP));
-
         viewHolderDetail.lowTempView.setText(low);
+        viewHolderDetail.lowTempView.setContentDescription(getString(R.string.a11y_low_temp,low));
+
         String humidity =  String.valueOf(data.getDouble(COL_WEATHER_HUMIDITY));
         viewHolderDetail.humidityView.setText(" Humidity: " + humidity + "%");
+        viewHolderDetail.humidityView.setContentDescription(humidity);
 
         float windSpeed = data.getFloat(COL_WEATHER_WIND_SPEED);
         float degrees = data.getFloat(COL_WEATHER_DEGREES);
         String windWithDirection = Utility.getFormattedWind(getActivity(),windSpeed,degrees);
         viewHolderDetail.windInfo.setText(windWithDirection);
+        viewHolderDetail.windInfo.setContentDescription(windWithDirection);
+
 
         String pressure = String.valueOf(data.getLong(COL_WEATHER_PRESSURE));
         viewHolderDetail.pressure.setText(" Pressure: "+pressure+" hPa");
+        viewHolderDetail.pressure.setContentDescription(pressure);
 
         //sharing of data
         mForecast = String.format("%s - %s - %s - %s ", dateString, weatherDescription, high, low);

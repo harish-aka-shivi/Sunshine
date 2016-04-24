@@ -103,14 +103,15 @@ public class ForecastAdapter extends CursorAdapter {
         // TODO Read date from cursor
         long date = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
         TextView dateView = viewHolder.dateView;
-                // (TextView) view.findViewById(R.id.list_item_date_textview);
         dateView.setText(Utility.getFriendlyDayString(context,date));
 
         // TODO Read weather forecast from cursor
         String desc = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
         TextView descView = viewHolder.descriptionView;
-                //(TextView) view.findViewById(R.id.list_item_forecast_textview);
         descView.setText(desc);
+        descView.setContentDescription(mContext.getString(R.string.a11y_forecast,desc));
+        viewHolder.iconView.setContentDescription(mContext.getString(R.string.a11y_forecast_icon,desc));
+
         // Read user preference for metric or imperial temperature units
         boolean isMetric = Utility.isMetric(context);
 
@@ -118,12 +119,16 @@ public class ForecastAdapter extends CursorAdapter {
         double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
         TextView highView = viewHolder.highTempView;
                 //(TextView) view.findViewById(R.id.list_item_high_textview);
-        highView.setText(Utility.formatTemperature(mContext,high));
+        String temp_high = Utility.formatTemperature(mContext,high);
+        highView.setText(temp_high);
+        highView.setContentDescription(mContext.getString(R.string.a11y_high_temp,high));
 
         // TODO Read low temperature from cursor
         double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
         TextView lowView = viewHolder.lowTempView;
                 //(TextView) view.findViewById(R.id.list_item_low_textview);
-        lowView.setText(Utility.formatTemperature(mContext,low));
+        String temp_low = Utility.formatTemperature(mContext,low);
+        lowView.setText(temp_low);
+        lowView.setContentDescription(mContext.getString(R.string.a11y_low_temp,temp_low));
     }
 }
