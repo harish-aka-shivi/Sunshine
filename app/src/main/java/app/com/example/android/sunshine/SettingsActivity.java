@@ -56,6 +56,7 @@ public class SettingsActivity extends PreferenceActivity
         // TODO: Add preferences
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_temp_units_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_art_pack_key)));
         // rakkar zip 176057
     }
 
@@ -73,7 +74,8 @@ public class SettingsActivity extends PreferenceActivity
             // bind location again
             Preference locationPreference =  findPreference(getString(R.string.pref_location_key));
             bindPreferenceSummaryToValue(locationPreference);
-
+        } else if (key.equals(getString(R.string.pref_art_pack_key))) {
+            getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI,null);
         }
     }
 

@@ -1,5 +1,26 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
 
+    <string name="pref_units_label_metric">Metric</string>
+    <string name="pref_units_label_imperial">Imperial</string>
+
+    <!-- Label for the art pack preference [CHAR LIMIT=30] -->
+    <string name="pref_art_pack_label">Icon Pack</string>
+    <!-- Label for Sunshine option in art pack preference [CHAR LIMIT=25] -->
+    <string name="pref_art_pack_label_sunshine">Sunshine</string>
+    <!-- Label for cute dogs option in art pack preference [CHAR LIMIT=25] -->
+    <string name="pref_art_pack_label_cute_dogs">Cute dogs</string>
+    <!-- Key name for art pack unit preference in SharedPreferences [CHAR LIMIT=NONE] -->
+    <string name="pref_art_pack_key" translatable="false">art_pack</string>
+    <!-- Value in SharedPreferences for Sunshine art pack option [CHAR LIMIT=NONE] -->
+    <string name="pref_art_pack_sunshine" translatable="false">https://raw.githubusercontent.com
+        /udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-xxhdpi/art_%s.png</string>
+    <!-- Value in SharedPreferences for cute dogs art pack  option [CHAR LIMIT=NONE] -->
+    <string name="pref_art_pack_cute_dogs" translatable="false">https://raw.githubusercontent.com
+        /udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-mdpi/art_%s.png</string>
+
+    <!-- Format for retrieving art from an external source [CHAR LIMIT=NONE] -->
+    <string name="format_art_url" translatable="false">https://raw.githubusercontent.com/udacity/Sunshine-Version-2
+        /sunshine_master/app/src/main/res/drawable-xxhdpi/art_<xliff:g id="description">%s</xliff:g>.png</string>
     <!-- Notification Format -->
     <string name="format_notification">
     Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s</xliff:g> Low: <xliff:g id="low">%3$s</xliff:g>
@@ -20,7 +41,6 @@
 
     <!-- Date label when displaying today's weather forecast [CHAR LIMIT=20] -->
     <string name="today">Today</string>
-
     <!-- Date label when displaying tomorrow's weather forecast [CHAR LIMIT=20] -->
     <string name="tomorrow">Tomorrow</string>
 
@@ -34,15 +54,12 @@
     <string name="format_wind_mph">
     Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g>
     </string>
-
     <!-- Wind in kph [CHAR LIMIT=25] -->
     <string name="format_wind_kmh">
     Wind: <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g>
     </string>
-
     <!-- Pressure format CHAR LIMIT=25] -->
     <string name="format_pressure">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
-
     <!-- Humidity format CHAR LIMIT=25]-->
     <string name="format_humidity">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%</string>
 
@@ -51,20 +68,23 @@
     <string name="andr.png">andr.png.png</string>
     <string name="temp">21°</string>
     <string name="temp_next">8°</string>
-    1<string name="action_refresh">Refresh</string>
+    <string name="action_refresh">Refresh</string>
     <string name="enter_location">Enter your location here</string>
     <string name="go">Go</string>
     <string name="title_activity_detail">details</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="location_input">Location</string>
+
     <string name="pref_location_default">94043</string>
     <string name="pref_temp_units_key">temp_units</string>
     <string name="pref_temp_units_title">Temperature Units</string>
     <string name="pref_temp_units_default">metric</string>
     <string name="pref_location_key">location</string>
     <string name="pref_units_key">units</string>
+
     <string name="pref_units_metric">metric</string>
     <string name="pref_units_imperial">imperial</string>
+
     <string name="pref_location_status_key">location status</string>
     <string name="pref_units_default">metric</string>
 

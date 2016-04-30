@@ -28,6 +28,15 @@
         android:defaultValue="@string/pref_enable_notifications_default">
     </CheckBoxPreference>
 
+    <ListPreference
+        android:key="@string/pref_art_pack_key"
+        android:title="@string/pref_art_pack_label"
+        android:defaultValue="@string/pref_art_pack_sunshine"
+        android:entries="@array/pref_art_pack_options"
+        android:entryValues="@array/pref_art_pack_values">
+
+    </ListPreference>
+
 </PreferenceScreen>
 <!--
 <EditTextPreference

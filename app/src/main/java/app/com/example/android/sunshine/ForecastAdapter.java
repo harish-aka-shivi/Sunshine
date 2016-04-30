@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
 import app.com.example.android.sunshine.data.WeatherContract;
 import app.com.example.android.sunshine.R;
 /**
@@ -87,19 +90,22 @@ public class ForecastAdapter extends CursorAdapter {
         // we'll keep the UI functional with a simple (and slow!) binding.
         // Read weather icon ID from cursor
         int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
+        int fallbackIconId;
         // Use placeholder image for now
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         int viewType = getItemViewType(cursor.getPosition());
         switch (viewType) {
             case VIEW_TYPE_TODAY:
-                viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
+                fallbackIconId = Utility.getArtResourceForWeatherCondition(weatherId);
                 break;
-            case VIEW_TYPE_FUTURE_DAY:
-                viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(weatherId));
+            default:
+                fallbackIconId = Utility.getIconResourceForWeatherCondition(weatherId);
                 break;
         }
 
+        Glide.with(mContext).load(Utility.getArtUrlForWeatherCondition(mContext,weatherId)).
+                error(fallbackIconId).crossFade().into(viewHolder.iconView);
         // TODO Read date from cursor
         long date = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
         TextView dateView = viewHolder.dateView;
