@@ -172,10 +172,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         if (!data.moveToFirst()) {
             return;
         }
-        String dateString = Utility.getDayName(getActivity(), data.getLong(COL_WEATHER_DATE));
         ViewHolderDetail viewHolderDetail = (ViewHolderDetail) rootView.getTag();
-        viewHolderDetail.dateView.setText(dateString);
+        long date = data.getLong(COL_WEATHER_DATE);
+        String dateText = Utility.getFullFriendlyDayString(getActivity(),date);
+        viewHolderDetail.dateView.setText(dateText);
 
+        /*String dateString = Utility.getDayName(getActivity(), data.getLong(COL_WEATHER_DATE));
+        viewHolderDetail.dateView.setText(dateString);
+*/
         int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
         String url = Utility.getArtUrlForWeatherCondition(getActivity(),weatherId);
 
@@ -183,9 +187,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 .crossFade().into(viewHolderDetail.iconView);
         //viewHolderDetail.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
-        String dayString = Utility.getFormattedMonthDay(getActivity(),data.getLong(COL_WEATHER_DATE));
+        /*String dayString = Utility.getFormattedMonthDay(getActivity(),data.getLong(COL_WEATHER_DATE));
         viewHolderDetail.dayView.setText(dayString);
-
+*/
         // set content Description for icon and description view
         String weatherDescription = data.getString(COL_WEATHER_DESC);
         viewHolderDetail.descView.setText(weatherDescription);
@@ -205,7 +209,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         viewHolderDetail.lowTempView.setContentDescription(getString(R.string.a11y_low_temp,low));
 
         String humidity =  String.valueOf(data.getDouble(COL_WEATHER_HUMIDITY));
-        viewHolderDetail.humidityView.setText(" Humidity: " + humidity + "%");
+        viewHolderDetail.humidityView.setText(humidity + "%");
         viewHolderDetail.humidityView.setContentDescription(humidity);
 
         float windSpeed = data.getFloat(COL_WEATHER_WIND_SPEED);
@@ -216,11 +220,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
 
         String pressure = String.valueOf(data.getLong(COL_WEATHER_PRESSURE));
-        viewHolderDetail.pressure.setText(" Pressure: "+pressure+" hPa");
+        viewHolderDetail.pressure.setText(pressure+" hPa");
         viewHolderDetail.pressure.setContentDescription(pressure);
 
         //sharing of data
-        mForecast = String.format("%s - %s - %s - %s ", dateString, weatherDescription, high, low);
+        mForecast = String.format("%s - %s - %s - %s ", dateText, weatherDescription, high, low);
         //mTextView.setText(mForecast);
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(createShareForecastIntent());

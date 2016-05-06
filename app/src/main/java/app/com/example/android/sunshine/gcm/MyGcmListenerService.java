@@ -52,13 +52,16 @@ public class MyGcmListenerService extends GcmListenerService {
             if ((senderId).equals(from)) {
                 // Process message and then post a notification of the received message.
                 try {
-                    JSONObject jsonObject = new JSONObject(data.getString(EXTRA_DATA));
-                    String weather = jsonObject.getString(EXTRA_WEATHER);
-                    String location = jsonObject.getString(EXTRA_LOCATION);
+                    //Bundle example = data.getBundle(EXTRA_DATA);
+                    //String ex = example.getString(EXTRA_WEATHER);
+                    //JSONObject jsonObject = new JSONObject(data.getString(EXTRA_DATA));
+                    String weather = data.getString(EXTRA_WEATHER);
+                    String location = data.getString(EXTRA_LOCATION);
                     String alert =
                             String.format(getString(R.string.gcm_weather_alert), weather, location);
                     sendNotification(alert);
-                } catch (JSONException e) {
+                } catch (Exception e) {
+
                     // JSON parsing failed, so we just let this message go, since GCM is not one
                     // of our critical features.
                 }
