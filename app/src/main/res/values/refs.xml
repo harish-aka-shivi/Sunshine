@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <item type="layout" name="detail_forecast_start">@layout/detail_forecast_normal</item>
+</resources>

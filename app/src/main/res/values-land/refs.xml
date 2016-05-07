@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name = "detail_forecast" type = "layout">@layout/detail_forecast_wide</item>
+    <item name = "detail_forecast_start" type = "layout">@layout/detail_forecast_wide</item>
 </resources>

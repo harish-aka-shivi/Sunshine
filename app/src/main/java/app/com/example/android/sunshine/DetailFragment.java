@@ -10,6 +10,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +42,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     public static class ViewHolderDetail {
         //public final ImageView iconView;
-        public final TextView dayView;
+        //public final TextView dayView;
         public final TextView dateView;
         public final TextView highTempView;
         public final TextView lowTempView;
@@ -52,7 +53,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         public final TextView pressure;
         public ViewHolderDetail(View view) {
             //iconView  = (ImageView) view.findViewById(R.id.image_icon);
-            dayView = (TextView) view.findViewById(R.id.item_day);
+            //dayView = (TextView) view.findViewById(R.id.item_day);
             dateView = (TextView) view.findViewById(R.id.item_date);
             highTempView = (TextView) view.findViewById(R.id.item_high_temp);
             lowTempView = (TextView) view.findViewById(R.id.item_low_temp);
@@ -128,7 +129,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.detail_forecast, container, false);
+        rootView = inflater.inflate(R.layout.detail_forecast_start, container, false);
         //Intent intent = getActivity().getIntent();
         setHasOptionsMenu(true);
         Bundle arguments = getArguments();
@@ -153,6 +154,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
             mUri = updatedUri;
             getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+            getView().setVisibility(View.INVISIBLE);
         }
         //getLoaderManager().restartLoader(DETAIL_LOADER,null,this);
     }
@@ -176,6 +178,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         long date = data.getLong(COL_WEATHER_DATE);
         String dateText = Utility.getFullFriendlyDayString(getActivity(),date);
         viewHolderDetail.dateView.setText(dateText);
+
 
         /*String dateString = Utility.getDayName(getActivity(), data.getLong(COL_WEATHER_DATE));
         viewHolderDetail.dateView.setText(dateString);

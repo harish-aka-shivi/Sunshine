@@ -21,7 +21,7 @@ public class DetailActivity extends AppCompatActivity{
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.weather_detail_container, fragment)
+                    .replace(R.id.weather_detail_container, fragment)
                     .commit();
         }
     }

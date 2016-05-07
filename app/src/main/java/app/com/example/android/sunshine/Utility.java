@@ -23,12 +23,9 @@ import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
-import app.com.example.android.sunshine.R;
 import app.com.example.android.sunshine.sync.SunshineSyncAdapter;
 
 public class Utility {

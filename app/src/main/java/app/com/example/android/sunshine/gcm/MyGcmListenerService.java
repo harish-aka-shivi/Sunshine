@@ -13,9 +13,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import app.com.example.android.sunshine.MainActivity;
 import app.com.example.android.sunshine.R;
 
