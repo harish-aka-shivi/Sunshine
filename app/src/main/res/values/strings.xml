@@ -1,5 +1,6 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
 
+    <string name="empty_forecast_list">No Weather Information Available</string>
     <string name="wind">Wind</string>
     <string name="humidity">Humidity</string>
     <string name="pressure">Pressure</string>
