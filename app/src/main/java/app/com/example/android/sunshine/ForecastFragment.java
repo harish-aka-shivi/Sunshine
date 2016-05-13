@@ -1,5 +1,6 @@
 package app.com.example.android.sunshine;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -27,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -127,13 +130,36 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container,false);
+        final View rootView = inflater.inflate(R.layout.fragment_main, container,false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycview_forcast);
 
         //set the layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mEmptyTextView = (TextView) rootView.findViewById(R.id.empty_list);
+        final View parallaxView = rootView.findViewById(R.id.parallax_bar);
+
+        if (parallaxView != null ) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    @TargetApi(11)
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        int max = parallaxView.getHeight();
+                        if (dy > 0) {
+                            parallaxView.setTranslationY(Math.max(-max,parallaxView.getTranslationY() - dy/2));
+                            //parallaxView.setTranslationY(dy/2);
+                        } else {
+                            parallaxView.setTranslationY(Math.min(0, parallaxView.getTranslationY() - dy/2));
+                            //parallaxView.setTranslationY(dy/2);
+
+                        }
+                    }
+                });
+            }
+        }
 
         mForecastAdapter = new ForecastAdapter(getActivity(), new ForecastAdapter.ForecastAdapterOnClickHandler() {
             @Override
@@ -180,6 +206,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
         //
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRecyclerView.clearOnScrollListeners();
     }
 
     public void onSaveInstanceState(Bundle savedInstanceState) {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/appbar"
+        android:id="@+id/parallax_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -19,15 +19,10 @@
             android:elevation="0dp"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="?attr/listPreferredItemHeight"
-            android:layout_gravity="center"
-            android:scaleType="center"
-            android:src="@drawable/ic_logo"
-            android:contentDescription="@string/app_name"/>
+        <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="?attr/listPreferredItemHeight"/>
     </LinearLayout>
-
 
     <include layout="@layout/fragment_main_base"
         android:layout_height="match_parent"

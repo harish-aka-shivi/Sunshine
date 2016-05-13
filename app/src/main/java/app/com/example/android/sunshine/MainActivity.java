@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.BoolRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -92,7 +94,12 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     public void onItemSelected(Uri uri) {
         if(mTwoPane == false) {
             Intent intent = new Intent(this, DetailActivity.class).setData(uri);
-            startActivity(intent);
+            //startActivity(intent);
+            ActivityOptionsCompat activityOptions =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+            ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
+
+
         } else {
 
             // In two-pane mode, show the detail view in this activity by
