@@ -1,5 +1,8 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
 
+    <string name="shared_transition_name">shared_transition_view</string>
+    <string name="detail_icon_transition_name" translatable="false">TN_DetailIcon</string>
+
     <string name="empty_forecast_list">No Weather Information Available</string>
     <string name="wind">Wind</string>
     <string name="humidity">Humidity</string>

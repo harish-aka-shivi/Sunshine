@@ -11,7 +11,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     private boolean mTwoPane = false;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public final static String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+    private RecyclerView mRecyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         mLocation = Utility.getPreferredLocation(this);
         ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().
                 findFragmentById(R.id.fragment_forecast);
+        //find the recycler view
+        mRecyclerView = (RecyclerView) forecastFragment.getView().findViewById(R.id.recycview_forcast);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -91,30 +96,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         return true;
     }
 
-    public void onItemSelected(Uri uri) {
-        if(mTwoPane == false) {
-            Intent intent = new Intent(this, DetailActivity.class).setData(uri);
-            //startActivity(intent);
-            ActivityOptionsCompat activityOptions =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(this);
-            ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
 
-
-        } else {
-
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            Bundle args = new Bundle();
-            args.putParcelable(DetailFragment.DETAIL_URI, uri);
-            DetailFragment fragment = new DetailFragment();
-            fragment.setArguments(args);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
-                    .commit();
-
-        }
-    }
     public void displayTodayFragment(Uri dataUri) {
         if (mTwoPane) {
             Bundle args = new Bundle();
@@ -123,6 +105,32 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction().replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
                 .commitAllowingStateLoss();
+        }
+    }
+
+    @Override
+    public void onItemSelected(Uri dateUri, ForecastAdapter.ForecastAdapterViewHolder vh) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, dateUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(dateUri);
+
+            ActivityOptionsCompat activityOptions =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                            new Pair<View, String>(vh.mIconView, getString(R.string.detail_icon_transition_name)));
+            ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
         }
     }
 

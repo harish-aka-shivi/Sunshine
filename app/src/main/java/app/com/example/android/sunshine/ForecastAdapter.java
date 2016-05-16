@@ -1,7 +1,9 @@
 package app.com.example.android.sunshine;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,16 +29,20 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     final private Context mContext;
     final private ForecastAdapterOnClickHandler mForecastAdapterOnClickListener;
     final private View mEmptyView;
+    final private ItemChoiceManager mICM;
 
     /*@Override
     public int getViewTypeCount() {
         return VIEW_TYPE_COUNT;
     }*/
 
-    public ForecastAdapter(Context context,ForecastAdapterOnClickHandler forecastAdapterOnClickHandler ,View emptyView) {
+    public ForecastAdapter(Context context,ForecastAdapterOnClickHandler forecastAdapterOnClickHandler ,
+                           View emptyView, int choiceMode) {
         mContext = context;
         mForecastAdapterOnClickListener = forecastAdapterOnClickHandler;
         mEmptyView =  emptyView;
+        mICM = new ItemChoiceManager(this);
+        mICM.setChoiceMode(choiceMode);
     }
     /**
      * Prepare the weather high/lows for presentation.
@@ -218,7 +224,17 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         TextView descView = forecastAdapterViewHolder.mDescriptionView;
         descView.setText(desc);
         descView.setContentDescription(mContext.getString(R.string.a11y_forecast,desc));
-        forecastAdapterViewHolder.mIconView.setContentDescription(mContext.getString(R.string.a11y_forecast_icon,desc));
+
+        ImageView iconView = forecastAdapterViewHolder.mIconView;
+
+        // we give aunique name to our view holder so the system
+        // can find it when returning during transition
+        ViewCompat.setTransitionName(iconView,"iconView_"+position);
+
+        //my method to add transition name
+        //setUniqueTransitionName(iconView,position);
+
+        iconView.setContentDescription(mContext.getString(R.string.a11y_forecast_icon,desc));
 
         // Read user preference for metric or imperial temperature units
         boolean isMetric = Utility.isMetric(mContext);
@@ -226,18 +242,23 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         // Read high temperature from cursor
         double high = mCursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
         TextView highView = forecastAdapterViewHolder.mHighTempView;
-        //(TextView) view.findViewById(R.id.list_item_high_textview);
         String temp_high = Utility.formatTemperature(mContext,high);
         highView.setText(temp_high);
         highView.setContentDescription(mContext.getString(R.string.a11y_high_temp,high));
 
         // TODO Read low temperature from cursor
         double low = mCursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
-        TextView lowView = forecastAdapterViewHolder.mLowTempView;
+        TextView  lowView = forecastAdapterViewHolder.mLowTempView;
         //(TextView) view.findViewById(R.id.list_item_low_textview);
         String temp_low = Utility.formatTemperature(mContext,low);
         lowView.setText(temp_low);
         lowView.setContentDescription(mContext.getString(R.string.a11y_low_temp,temp_low));
+    }
+
+    @TargetApi(21)
+    public void setUniqueTransitionName(ImageView iconView, int position) {
+        String name  = "position_" + String.valueOf(position);
+        iconView.setTransitionName(name);
     }
 
     @Override
@@ -260,12 +281,23 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         mUseTodayLayout = useTodayLoyout;
     }
 
+
+    public int getSelectedItemPosition() {
+        return mICM.getSelectedItemPosition();
+    }
+
+    public void selectView(RecyclerView.ViewHolder viewHolder) {
+        if ( viewHolder instanceof ForecastAdapterViewHolder ) {
+            ForecastAdapterViewHolder vfh = (ForecastAdapterViewHolder)viewHolder;
+            vfh.onClick(vfh.itemView);
+        }
+    }
     @Override
     public int getItemViewType(int position) {
         return position == 0 && mUseTodayLayout ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
     }
 
-    public static interface ForecastAdapterOnClickHandler {
+    public interface ForecastAdapterOnClickHandler {
         void onClick(long date, ForecastAdapterViewHolder forecastAdapterViewHolder);
     }
 }
