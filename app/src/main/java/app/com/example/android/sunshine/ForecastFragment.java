@@ -16,10 +16,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telecom.Call;
@@ -156,7 +158,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_main, container,false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycview_forcast);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_forecast);
 
 
         // use this setting to improve performance if you know that changes
@@ -177,13 +179,30 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         super.onScrolled(recyclerView, dx, dy);
                         int max = parallaxView.getHeight();
+
                         if (dy > 0) {
                             parallaxView.setTranslationY(Math.max(-max,parallaxView.getTranslationY() - dy/2));
-                            //parallaxView.setTranslationY(dy/2);
                         } else {
                             parallaxView.setTranslationY(Math.min(0, parallaxView.getTranslationY() - dy/2));
-                            //parallaxView.setTranslationY(dy/2);
+                        }
+                    }
+                });
+            }
+        }
 
+        // to add the elevation when scrolling down
+        final AppBarLayout appbarView = (AppBarLayout)rootView.findViewById(R.id.appbar);
+        if (null != appbarView) {
+            ViewCompat.setElevation(appbarView, 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        if (0 == mRecyclerView.computeVerticalScrollOffset()) {
+                            appbarView.setElevation(0);
+                        } else {
+                            appbarView.setElevation(appbarView.getTargetElevation());
                         }
                     }
                 });

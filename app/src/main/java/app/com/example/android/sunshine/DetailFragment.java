@@ -205,8 +205,18 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
         String url = Utility.getArtUrlForWeatherCondition(getActivity(),weatherId);
 
-        Glide.with(this).load(url).error(Utility.getArtResourceForWeatherCondition(weatherId))
-                .crossFade().into(viewHolderDetail.iconView);
+        if ( Utility.usingLocalGraphics(getActivity()) ) {
+            viewHolderDetail.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
+        } else {
+            // Use weather art image
+            Glide.with(this)
+                    .load(Utility.getArtUrlForWeatherCondition(getActivity(), weatherId))
+                    .error(Utility.getArtResourceForWeatherCondition(weatherId))
+                    .crossFade()
+                    .into(viewHolderDetail.iconView);
+        }
+        //Glide.with(this).load(url).error(Utility.getArtResourceForWeatherCondition(weatherId))
+        //        .crossFade().into(viewHolderDetail.iconView);
         //viewHolderDetail.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
         /*String dayString = Utility.getFormattedMonthDay(getActivity(),data.getLong(COL_WEATHER_DATE));

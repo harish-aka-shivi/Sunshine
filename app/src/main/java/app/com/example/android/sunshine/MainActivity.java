@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().
                 findFragmentById(R.id.fragment_forecast);
         //find the recycler view
-        mRecyclerView = (RecyclerView) forecastFragment.getView().findViewById(R.id.recycview_forcast);
+        mRecyclerView = (RecyclerView) forecastFragment.getView().findViewById(R.id.recyclerView_forecast);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);

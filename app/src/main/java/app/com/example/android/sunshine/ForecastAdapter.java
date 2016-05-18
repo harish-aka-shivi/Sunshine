@@ -208,7 +208,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
             forecastAdapterViewHolder.mIconView.setImageResource(defaultImage);
         } else {
             Glide.with(mContext)
-                    .load(Utility.getArtUrlForWeatherCondition(mContext, weatherId))
+                    .load(Utility.getImageUrlForWeatherCondition(weatherId))
                     .error(defaultImage)
                     .crossFade()
                     .into(forecastAdapterViewHolder.mIconView);

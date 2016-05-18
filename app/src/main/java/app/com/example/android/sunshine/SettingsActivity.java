@@ -12,8 +12,13 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 
 import app.com.example.android.sunshine.data.WeatherContract;
 import app.com.example.android.sunshine.sync.SunshineSyncAdapter;
@@ -28,6 +33,8 @@ import app.com.example.android.sunshine.sync.SunshineSyncAdapter;
  */
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
+
+    protected static final int PLACE_PICKER_REQUEST = 9090;
 
     @Override
     protected void onPause() {
@@ -60,11 +67,16 @@ public class SettingsActivity extends PreferenceActivity
         // rakkar zip 176057
     }
 
+    // This method is invoked by dialog preference.
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_location_key))) {
             //we have changed the location
             //first clear location status
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove(getString(R.string.pref_location_longitude));
+            editor.remove(getString(R.string.pref_location_latitude));
+            editor.commit();
             Utility.resetLocationStatus(this);
             SunshineSyncAdapter.syncImmediately(this);
         } else if (key.equals(getString(R.string.pref_units_key))) {
@@ -142,5 +154,45 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     public Intent getParentActivityIntent() {
         return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check to see if the result is from our Place Picker intent
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                LatLng latLng = place.getLatLng();
+                String address = place.getAddress().toString();
+
+
+                if (TextUtils.isEmpty(address)) {
+                    address = String.format("(%.2f, %.2f)",latLng.latitude, latLng.longitude);
+                }
+
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(getString(R.string.pref_location_key), address);
+                float latitudeLocation = (float) latLng.latitude;
+                float longitudeLocation = (float) latLng.longitude;
+                editor.putFloat(getString(R.string.pref_location_latitude),latitudeLocation);
+                editor.putFloat(getString(R.string.pref_location_longitude),longitudeLocation);
+                editor.commit();
+
+                // Tell the SyncAdapter that we've changed the location, so that we can update
+                // our UI with new values. We need to do this manually because we are responding
+                // to the PlacePicker widget result here instead of allowing the
+                // LocationEditTextPreference to handle these changes and invoke our callbacks.
+                Preference locationPreference = findPreference(getString(R.string.pref_location_key));
+                setPreferenceSummary(locationPreference, address);
+                Utility.resetLocationStatus(this);
+                SunshineSyncAdapter.syncImmediately(this);
+
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 }
