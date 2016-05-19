@@ -166,20 +166,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAqbY4oqMCSVpzfTWWAa-MPqBL78yx3a_Q"/>
 
-        <receiver android:name=".SunshineWidgetProvider">
+        <!-- Today Widget -->
+        <receiver
+            android:name=".widget.TodayWidgetProvider"
+            android:label="@string/title_widget_today" >
             <intent-filter>
-                <action
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE">
-                </action>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="app.com.example.android.sunshine.ACTION_DATA_UPDATED"/>
             </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info_today">
-            </meta-data>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_today" />
         </receiver>
 
-
+        <service android:name=".widget.TodayWidgetIntentService" />
     </application>
 
 </manifest>

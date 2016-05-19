@@ -77,7 +77,9 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final int INDEX_MIN_TEMP = 2;
     private static final int INDEX_SHORT_DESC = 3;
 
-    // Interval at which to sync with the weather, in milliseconds.
+    public static final String ACTION_DATA_UPDATED = "app.com.example.android.sunshine.ACTION_DATA_UPDATED";
+
+    // Interval at which to sync with the weather, in milliseconds.10
     // 60 seconds (1 minute) * 180 = 3 hours
     public static final int SYNC_INTERVAL = 60*180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
@@ -460,11 +462,19 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
             Log.d(LOG_TAG, "FetchWeatherTask Complete. " + cVVector.size() + "Inserted");
             setLocationStatus(getContext(),LOCATION_STATUS_OK);
-
+            updateWidgets();
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
+    }
+
+    private void updateWidgets() {
+        Context context = getContext();
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
     }
 
     /**
