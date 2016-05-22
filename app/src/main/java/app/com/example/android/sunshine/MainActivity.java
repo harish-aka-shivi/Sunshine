@@ -67,9 +67,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
                     fragment.setArguments(args);
                 }
 
-
                 getSupportFragmentManager().beginTransaction().replace(R.id.weather_detail_container
-                        ,fragment, DETAILFRAGMENT_TAG).commit();
+                        ,fragment, DETAILFRAGMENT_TAG).addToBackStack(null).commit();
             }
         } else {
             mTwoPane = false;

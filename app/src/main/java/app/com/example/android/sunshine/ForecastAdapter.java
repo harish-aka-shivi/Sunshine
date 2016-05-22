@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -192,6 +193,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     public void onBindViewHolder(ForecastAdapterViewHolder forecastAdapterViewHolder, int position) {
         mCursor.moveToPosition(position);
         int weatherId = mCursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
+        Log.d("weather_Id ",String.valueOf(weatherId));
         int defaultImage;
         int viewType = getItemViewType(position);
         boolean useLongToday;
@@ -210,6 +212,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         if (Utility.usingLocalGraphics(mContext)) {
             forecastAdapterViewHolder.mIconView.setImageResource(defaultImage);
         } else {
+            Log.d("GLIDE_URL",Utility.getImageUrlForWeatherCondition(weatherId) );
             Glide.with(mContext)
                     .load(Utility.getImageUrlForWeatherCondition(weatherId))
                     .error(defaultImage)

@@ -1,5 +1,8 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
 
+    <!-- Strings related to Muzei Source -->
+    <string name="muzei_description">Today\'s weather</string>
+
     <string name="title_widget_detail">Sunshine Details</string>
 
     <!-- Strings related to Widgets -->

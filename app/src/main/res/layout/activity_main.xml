@@ -14,32 +14,5 @@
 
 
 
-<!--
-
-   <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-
-
-   <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="?attr/listPreferredItemHeight"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_logo"
-        android:scaleType="center"
-        android:background="@color/colorPrimaryMaterial"/>
-    </android.support.v7.widget.Toolbar>
-    </LinearLayout>
-    -->
 
 

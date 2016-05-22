@@ -52,6 +52,7 @@ import app.com.example.android.sunshine.R;
 import app.com.example.android.sunshine.Utility;
 import app.com.example.android.sunshine.data.WeatherContract;
 import app.com.example.android.sunshine.data.WeatherDbHelper;
+import app.com.example.android.sunshine.muzei.WeatherMuzeiSource;
 
 public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -460,9 +461,11 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
                     WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?",new String[]{String.valueOf(dayTime.setJulianDay(julianStartDay-1))});
 
-            Log.d(LOG_TAG, "FetchWeatherTask Complete. " + cVVector.size() + "Inserted");
+            //Log.d(LOG_TAG, "FetchWeatherTask Complete. " + cVVector.size() + "Inserted");
             setLocationStatus(getContext(),LOCATION_STATUS_OK);
             updateWidgets();
+            updateMuzei();
+
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -613,4 +616,14 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         editor.putInt(context.getString(R.string.pref_location_status_key),locationStatus);
         editor.commit();
     }
+    private void updateMuzei() {
+        // Muzei is only compatible with Jelly Bean MR1+ devices, so there's no need to update the
+        // Muzei background on lower API level devices
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Context context = getContext();
+            context.startService(new Intent(ACTION_DATA_UPDATED)
+                    .setClass(context, WeatherMuzeiSource.class));
+        }
+    }
+
 }
