@@ -1,5 +1,7 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
 
+    <string name="title_widget_detail">Sunshine Details</string>
+
     <!-- Strings related to Widgets -->
     <string name="title_widget_today">Sunshine Today</string>
 
@@ -96,7 +98,7 @@
     <string name="enter_location">Enter your location here</string>
     <string name="go">Go</string>
     <string name="title_activity_detail">details</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="location_input">Location</string>
 
     <string name="pref_location_default">94043</string>

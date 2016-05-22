@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import app.com.example.android.sunshine.data.WeatherContract;
 import app.com.example.android.sunshine.gcm.RegistrationIntentService;
 import app.com.example.android.sunshine.sync.SunshineSyncAdapter;
 
@@ -38,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        Uri contentUri = getIntent() != null ? getIntent().getData() : null;
         mLocation = Utility.getPreferredLocation(this);
         ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().
                 findFragmentById(R.id.fragment_forecast);
@@ -56,13 +59,27 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             // adding or replacing the detail fragment using a
             // fragment transaction.
             if (savedInstanceState == null) {
+
+                DetailFragment fragment = new DetailFragment();
+                if (contentUri != null) {
+                    Bundle args = new Bundle();
+                    args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+                    fragment.setArguments(args);
+                }
+
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.weather_detail_container
-                        ,new DetailFragment(), DETAILFRAGMENT_TAG).commit();
+                        ,fragment, DETAILFRAGMENT_TAG).commit();
             }
         } else {
             mTwoPane = false;
         }
         forecastFragment.setTodayView(!mTwoPane);
+        if (contentUri != null) {
+            forecastFragment.setInitialSelectedDate(
+                    WeatherContract.WeatherEntry.getDateFromUri(contentUri));
+        }
+
         SharedPreferences sharedPreferences1 = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences1.edit().putBoolean(SENT_TOKEN_TO_SERVER,false).commit();
         SunshineSyncAdapter.initializeSyncAdapter(this);
